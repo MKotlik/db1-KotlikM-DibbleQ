@@ -9,10 +9,10 @@ import csv       #facilitates CSV I/O
 #Main program function
 def main():
 	#Create & fill students table
-	enter_students("data\peeps.csv")
+	enter_students("data/peeps.csv")
 	
 	#Create & fill courses table
-	#enter_courses("data\courses.csv")
+	enter_courses("data/courses.csv")
 		
 def enter_students(filename):
 	#Open csv file for reading
@@ -42,12 +42,29 @@ def enter_students(filename):
 	csvFile.close()
 	
 
-#def enter_courses(csvDict):
+def enter_courses(filename):
+	#Open csv file for reading
+	csvFile = open(filename)
+	csvDict = csv.DictReader(csvFile)
 
-#USE QUERY BELOW FOR FILLING COURSES TABLE
-#FOLLOW FUNCTION FORMAT OF ENTER_STUDENTS FUNCTION ABOVE
+	#Prepare database for entry
+	f = "discobandit.db" #db filename
+	db = sqlite3.connect(f) #open if f exists, otherwise create
+	cur = db.cursor() #facilitate db ops
 
-#q = "CREATE TABLE courses (code TEXT, id INTEGER, mark INTEGER)"
+	#Create classes table
+	query = "CREATE TABLE classes (code TEXT, mark INTEGER, id INTEGER)"
+	cur.execute(query)
 
-#RUN
+	#enter class data into the table from csvDict
+	for entry in csvDict:
+		query = "INSERT INTO classes VALUES (?,?,?)"
+		values = (entry['code'], entry['mark'], entry['id'])
+		cur.execute(query, values)
+
+	#Commit and close resources
+	db.commit()
+	db.close()
+	csvFile.close()
+
 main()
