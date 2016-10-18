@@ -1,0 +1,44 @@
+#SQLite Assignment 1
+#Team: The Rainbow Keys
+#Quinn Dibble, Misha Kotlik
+#SoftDev, Pd. 9
+
+import sqlite3
+
+def main():
+    generate_averages(get_student_data())
+
+#get_student_data()
+#Retrieves student grade data from database
+#Returns csv list, 1st el - name, 2nd el - mark
+def get_student_data():
+    #Facilitate database interaction
+    conn = sqlite3.connect("discobandit.db")
+    cur = conn.cursor()
+
+    #Retrieve data from tables
+    #cur.execute(".mode csv")
+    #cur.execute(".headers off")
+    query = "SELECT name, mark FROM students, classes WHERE students.id == classes.id"
+    cur.execute(query)
+    data_list = cur.fetchall()
+    print "meow 1"
+
+    conn.close #close resources
+
+    return data_list #return data
+
+#generate_averages()
+#Takes student grade data and forms averages
+def generate_averages(grade_list):
+    print "meow 2"
+    student_dict = {}
+    for entry in grade_list:
+        print entry
+    
+
+#write_averages()
+#Takes student averages and writes to SQLite table
+
+#RUN
+main()
